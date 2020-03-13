@@ -1,0 +1,43 @@
+%define OTGU_KrigingAlgorithm_doc
+"KrigingAlgorithm class.
+
+Examples
+--------
+>>> import otgu
+>>> a = otgu.KrigingAlgorithm()
+
+Notes
+-----
+Template module class."
+%enddef
+%feature("docstring") OTGU::KrigingAlgorithmImplementation
+OTGU_KrigingAlgorithm_doc
+
+// ---------------------------------------------------------------------
+
+%define OTGU_KrigingAlgorithm_square_doc
+"Square of a point.
+
+Parameters
+----------
+point : sequence of float 
+    Input point
+
+Returns
+-------
+square : :py:class:`openturns.Point`
+    Square of point
+                  
+Examples
+--------
+>>> import openturns as ot
+>>> import otgu
+>>> a = otgu.KrigingAlgorithm()
+>>> point = ot.Point([1.0, 2.0, 3.0])
+>>> a.square(point)
+class=Point name=Unnamed dimension=3 values=[1,4,9]"
+%enddef
+%feature("docstring") OTGU::KrigingAlgorithmImplementation::square
+OTGU_KrigingAlgorithm_square_doc
+
+

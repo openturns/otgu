@@ -1,0 +1,7 @@
+// KrigingAlgorithm docstrings are defined in KrigingAlgorithmImplementation_doc.i.in
+
+%feature("docstring") OTGU::KrigingAlgorithm
+OTGU_KrigingAlgorithm_doc
+%feature("docstring") OTGU::KrigingAlgorithm::square
+OTGU_KrigingAlgorithm_square_doc
+

@@ -1,0 +1,46 @@
+#                                               -*- cmake -*-
+#
+#  OTGUConfig.cmake(.in)
+#
+#  Find OTGU includes and libraries
+#
+#  Copyright 2005-2019 Airbus-EDF-IMACS-ONERA-Phimeca
+#
+
+# Use the following variables to compile and link against OTGU:
+#  OTGU_FOUND          - True if OTGU was found on your system
+#  OTGU_USE_FILE       - The file making OTGU usable
+#  OTGU_DEFINITIONS    - Definitions needed to build with OTGU
+#  OTGU_INCLUDE_DIRS   - List of directories where OTGU' header file are
+#  OTGU_LIBRARY        - Library name
+#  OTGU_LIBRARIES      - List of libraries to link against
+#  OTGU_LIBRARY_DIRS   - List of directories containing OTGU' libraries
+#  OTGU_ROOT_DIR       - The base directory of OTGU
+#  OTGU_VERSION_STRING - A human-readable string containing the version
+#  OTGU_VERSION_MAJOR  - The major version of OTGU
+#  OTGU_VERSION_MINOR  - The minor version of OTGU
+#  OTGU_VERSION_PATCH  - The patch version of OTGU
+
+@PACKAGE_INIT@
+
+set ( OTGU_FOUND 1 )
+set ( OTGU_USE_FILE     "@PACKAGE_OTGU_USE_FILE@" )
+
+set ( OTGU_DEFINITIONS  "@OTGU_DEFINITIONS@" )
+set_and_check (OTGU_INCLUDE_DIR  "@PACKAGE_OTGU_INCLUDE_DIR@")
+set ( OTGU_INCLUDE_DIRS "@PACKAGE_OTGU_INCLUDE_DIRS@" )
+set_and_check (OTGU_LIBRARY      "@OTGU_LIBRARY@")
+set ( OTGU_LIBRARIES    "@PACKAGE_OTGU_LIBRARIES@" )
+set ( OTGU_LIBRARY_DIRS "@PACKAGE_OTGU_LIBRARY_DIRS@" )
+set_and_check (OTGU_ROOT_DIR     "@PACKAGE_OTGU_ROOT_DIR@")
+
+set ( OTGU_VERSION_STRING "@OTGU_VERSION_STRING@" )
+set ( OTGU_VERSION_MAJOR  "@OTGU_VERSION_MAJOR@" )
+set ( OTGU_VERSION_MINOR  "@OTGU_VERSION_MINOR@" )
+set ( OTGU_VERSION_PATCH  "@OTGU_VERSION_PATCH@" )
+
+set (OTGU_SWIG_INCLUDE_DIRS "@PACKAGE_OTGU_SWIG_INCLUDE_DIRS@")
+set (OTGU_PYTHON@PYTHON_VERSION_MAJOR@_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include (${CMAKE_CURRENT_LIST_DIR}/OTGU-Targets.cmake)
