@@ -84,7 +84,8 @@ endmacro ()
 
 ot_add_python_module( ${PACKAGE_NAME} ${PACKAGE_NAME}_module.i 
                       KrigingAlgorithm.i KrigingAlgorithm_doc.i.in
-                      KrigingAlgorithmImplementation.i KrigingAlgorithmImplementation_doc.i.in
+                      GeneralLinearModelAlgorithm.i GeneralLinearModelAlgorithm_doc.i.in
+                      GeneralLinearModelResult.i GeneralLinearModelResult_doc.i.in
                     )
 
 

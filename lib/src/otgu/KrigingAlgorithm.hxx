@@ -1,8 +1,8 @@
 //                                               -*- C++ -*-
 /**
- *  @brief KrigingAlgorithm
+ *  @brief The class building gaussian process regression
  *
- *  Copyright 2005-2019 Airbus-EDF-IMACS-ONERA-Phimeca
+ *  Copyright 2005-2020 Airbus-EDF-IMACS-ONERA-Phimeca
  *
  *  This library is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
@@ -21,45 +21,135 @@
 #ifndef OTGU_KRIGINGALGORITHM_HXX
 #define OTGU_KRIGINGALGORITHM_HXX
 
-#include <openturns/TypedInterfaceObject.hxx>
-#include <openturns/StorageManager.hxx>
-#include <openturns/Point.hxx>
-#include "otgu/OTGUprivate.hxx"
+#include "otgu/GeneralLinearModelAlgorithm.hxx"
 
-namespace OTGU
-{
+#include "openturns/MetaModelAlgorithm.hxx"
+#include "openturns/Basis.hxx"
+#include "openturns/CovarianceModel.hxx"
+#include "openturns/KrigingResult.hxx"
+#include "openturns/HMatrix.hxx"
 
-/* forward declaration */
-class KrigingAlgorithmImplementation;
+//BEGIN_NAMESPACE_OPENTURNS
+namespace OTGU {
 
 /**
  * @class KrigingAlgorithm
  *
- * KrigingAlgorithm is some krigingalgorithm type to illustrate how to add some classes in Open TURNS
+ * The class building kriging process, relying on generalized linear model class (GeneralLinearModelAlgorithm)
+ * for the evaluation of the coefficients of the parameters.
  */
+
 class OTGU_API KrigingAlgorithm
-  : public OT::TypedInterfaceObject<KrigingAlgorithmImplementation>
+  : public OT::MetaModelAlgorithm
 {
-  CLASSNAME;
+  CLASSNAME
 
 public:
+
+  typedef OT::KrigingResult::BasisCollection BasisCollection;
+  typedef OT::KrigingResult::BasisPersistentCollection BasisPersistentCollection;
+  typedef GeneralLinearModelAlgorithm::ScalePrior ScalePrior;
 
   /** Default constructor */
   KrigingAlgorithm();
 
-  /** Constructor from implementation */
-  KrigingAlgorithm(const KrigingAlgorithmImplementation & implementation);
+  /** Constructor */
+  KrigingAlgorithm (const OT::Sample & inputSample,
+                    const OT::Sample & outputSample,
+                    const OT::CovarianceModel & covarianceModel,
+                    const OT::Basis & basis,
+                    const OT::Bool normalize = true);
 
-  /** a func that return a point squared. **/
-  OT::Point square(OT::Point & p) const;
+  /** Constructor */
+  KrigingAlgorithm (const OT::Sample & inputSample,
+                    const OT::Sample & outputSample,
+                    const OT::CovarianceModel & covarianceModel,
+                    const BasisCollection & basisCollection,
+                    const OT::Bool normalize = true);
+
+  /** Virtual constructor */
+  KrigingAlgorithm * clone() const;
 
   /** String converter */
-  OT::String __repr__() const;
+  virtual OT::String __repr__() const;
+
+  /** Perform regression */
+  void run();
+
+  /** Sample accessors */
+  OT::Sample getInputSample() const;
+  OT::Sample getOutputSample() const;
+
+  /** result accessor */
+  OT::KrigingResult getResult();
+
+  /** Optimization solver accessor */
+  OT::OptimizationAlgorithm getOptimizationAlgorithm() const;
+  void setOptimizationAlgorithm(const OT::OptimizationAlgorithm & solver);
+
+  /** Accessor to optimization bounds */
+  void setOptimizationBounds(const OT::Interval & optimizationBounds);
+  OT::Interval getOptimizationBounds() const;
+
+  /** Log-Likelihood function accessor */
+  OT::Function getReducedLogLikelihoodFunction();
+
+  /** Optimization flag accessor */
+  OT::Bool getOptimizeParameters() const;
+  void setOptimizeParameters(const OT::Bool optimizeParameters);
+
+  /** Observation noise accessor */
+  void setNoise(const OT::Point & noise);
+  OT::Point getNoise() const;
+
+  /** Linear algebra method */
+  void setMethod(const OT::String & method);
+  OT::String getMethod() const;
+
+  /** Scale prior accessor */
+  ScalePrior getScalePrior() const;
+  void setScalePrior(const ScalePrior likelihoodPrior);
+
+  /** Method save() stores the object through the StorageManager */
+  void save(OT::Advocate & adv) const;
+
+  /** Method load() reloads the object from the StorageManager */
+  void load(OT::Advocate & adv);
+
+
+protected:
+
+  /** The method helps to compute the gamma point */
+  void computeGamma();
 
 private:
 
-}; /* class KrigingAlgorithm */
+  // The input data
+  OT::Sample inputSample_;
+  // The associated output data
+  OT::Sample outputSample_;
+  OT::Bool normalize_;
+  // The covariance model parametric family
+  OT::CovarianceModel covarianceModel_;
+  // Underlying algo used for the evaluation of parameters
+  GeneralLinearModelAlgorithm glmAlgo_;
+  // The coefficients of the current output deterministic trend
+  mutable OT::Point gamma_;
+  // Temporarly used to compute gamma
+  mutable OT::Point rho_;
 
-} /* namespace OTGU */
+  /** Result */
+  OT::KrigingResult result_;
 
-#endif /* OTGU_KRIGINGALGORITHM_HXX */
+  /** Cholesky factor ==>  TriangularMatrix */
+  mutable OT::TriangularMatrix covarianceCholeskyFactor_;
+
+  /** Cholesky factor when using hmat-oss */
+  mutable OT::HMatrix covarianceCholeskyFactorHMatrix_;
+
+}; // class KrigingAlgorithm
+
+
+END_NAMESPACE_OPENTURNS
+
+#endif

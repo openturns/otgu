@@ -18,7 +18,8 @@
 
 // The new classes
 %include otgu/OTGUprivate.hxx
-%include KrigingAlgorithmImplementation.i
+%include GeneralLinearModelResult.i
+%include GeneralLinearModelAlgorithm.i
 %include KrigingAlgorithm.i
 
 

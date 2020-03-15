@@ -6,5 +6,6 @@ API Reference
 .. autosummary::
     :toctree: _generated/
     :template: class.rst_t
-  
+
+    GeneralLinearModelAlgorithm
     KrigingAlgorithm

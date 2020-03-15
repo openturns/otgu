@@ -1,0 +1,5 @@
+parameters= [0.0100001]
+parameters= [0.108418]
+parameters= [0.0100001]
+Test A : prior = REFERENCE, parametrization = STANDARD
+Test D : prior = JOINTLYROBUST, parametrization = STANDARD

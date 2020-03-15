@@ -22,7 +22,8 @@
 #ifndef OTGU_OTGU_HXX
 #define OTGU_OTGU_HXX
 
-#include "otgu/KrigingAlgorithmImplementation.hxx"
+#include "otgu/GeneralLinearModelResult.hxx"
+#include "otgu/GeneralLinearModelAlgorithm.hxx"
 #include "otgu/KrigingAlgorithm.hxx"
 
 #endif // OTGU_OTGU_HXX

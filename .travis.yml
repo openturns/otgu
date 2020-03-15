@@ -1,0 +1,38 @@
+language: cpp
+sudo: required
+
+install:
+  - curl http://ubuntu.openturns.org/openturns.org-repo.key | sudo apt-key add -
+  - echo deb http://ubuntu.openturns.org xenial main | sudo tee /etc/apt/sources.list.d/openturns.list
+  - sudo apt-get update
+  - sudo apt-get -y install libopenturns-dev python-openturns cmake gfortran swig texlive-latex-recommended texlive-fonts-recommended texlive-latex-extra python-matplotlib
+  - sudo rm -r /opt/python/*
+  - pip install sphinx numpydoc matplotlib --user --upgrade
+
+script:
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local
+    -DSPHINX_EXECUTABLE=~/.local/bin/sphinx-build
+    .
+  - make install -j2 && make tests -j2 && ctest -j2 --output-on-failure --timeout 100
+
+after_success:
+  - test "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_BRANCH" = "master" || exit 0
+  - git clone --depth 1 https://${GH_TOKEN}@github.com/openturns/openturns.github.io.git
+  - PROJECT_REPONAME=`echo "${TRAVIS_REPO_SLUG}" | cut -d "/" -f 2`
+  - if test -n "${TRAVIS_TAG}"; then
+        TRAVIS_BRANCH=${TRAVIS_TAG:1};
+    fi
+  - mkdir -p openturns.github.io/${PROJECT_REPONAME}/${TRAVIS_BRANCH}
+  - cp -r ~/.local/share/${PROJECT_REPONAME}/doc/html/* openturns.github.io/${PROJECT_REPONAME}/${TRAVIS_BRANCH}
+  - cd openturns.github.io
+  - touch .nojekyll
+  - git config user.email "support@travis-ci.com"
+  - git config user.name "Travis CI"
+  - git add -A .
+  - git commit -a -m "Travis build ${PROJECT_REPONAME} ${TRAVIS_BUILD_NUMBER}"
+  - git push --quiet origin master > /dev/null 2>&1
+
+env:
+  global:
+    secure: "FzZNe7r/R0ZeU/3TnS9fux0mCCrEfaFxIcBkqZuhbPMwsEFZRRq9SQhlAkA2moNVy/y3brAQkGnXlD7XWVvqvcANerH7/K+dRvd5uhoK9yJFz4gCSPhOQlV9EhPIAz5Kx+84Id2xb2Qw5irDFzAb4UYwiKkRiewHAEOrbNrtLyTqS5yI3XHseALdeHpaAeiQW6sdvGkfWr/65aJpLx+YKi758DzyaVUzn4XngcX9nQ/HKVY4nZSNi/bo4pSeKB2Z1e4FbDbF1z19gaW0hV+EOJ0PmWPw8v2IsVdP3bV54nFCp03b8VZPaoNVSwD8XGk1j9y7ZP+ua7EBGaW2oVWlqF57SPJdpXQN7X3cd1YzjRt/Dtb588mA1sFN2K9UBohsOYeNesGo0wq1lp5ri8l9HF2z+hVKe1dFJe4q4B8d3kLSnGNv87y+4zfg7sNJiHqDQCV5zxRrHHZg+JnVj06veWc1drWkmjnmjdjbZeAc7fJfBnCTuGD2yDcYt5UURYEWS5KueKlD02pXV0aeSwbBdpgoYhZHB6WSSUVB5Nw1Skl1idFOteWgnR1IZo7cY83eliQz4BB47dc3/SMAeMAFiULAPIUuvi9Un3QmBL3mpp9VuACRbN6Xp0BBWsFL/owjYBLrP1qziq/it6oBlz9vcUpwURkYDol3xu5DyQ6bX2U="
+
