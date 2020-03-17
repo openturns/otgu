@@ -10,9 +10,9 @@ install:
   - pip install sphinx numpydoc matplotlib --user --upgrade
 
 script:
-  - cmake -DCMAKE_INSTALL_PREFIX=~/.local
+  - mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=~/.local
     -DSPHINX_EXECUTABLE=~/.local/bin/sphinx-build
-    .
+    ..
   - make install -j2 && make tests -j2 && ctest -j2 --output-on-failure --timeout 100
 
 after_success:
