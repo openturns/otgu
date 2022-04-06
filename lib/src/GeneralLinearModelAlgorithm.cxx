@@ -119,7 +119,7 @@ GeneralLinearModelAlgorithm::GeneralLinearModelAlgorithm(const Sample & inputSam
   {
     const UnsignedInteger dimension = inputSample_.getDimension();
     const Point mean(inputSample_.computeMean());
-    const Point stdev(inputSample_.computeStandardDeviationPerComponent());
+    const Point stdev(inputSample_.computeStandardDeviation());
     SquareMatrix linear(dimension);
     for (UnsignedInteger j = 0; j < dimension; ++ j)
     {
@@ -180,7 +180,7 @@ GeneralLinearModelAlgorithm::GeneralLinearModelAlgorithm(const Sample & inputSam
   {
     const UnsignedInteger dimension = inputSample_.getDimension();
     const Point mean(inputSample_.computeMean());
-    const Point stdev(inputSample_.computeStandardDeviationPerComponent());
+    const Point stdev(inputSample_.computeStandardDeviation());
     SquareMatrix linear(dimension);
     for (UnsignedInteger j = 0; j < dimension; ++ j)
     {
@@ -254,7 +254,7 @@ GeneralLinearModelAlgorithm::GeneralLinearModelAlgorithm(const Sample & inputSam
   {
     const UnsignedInteger dimension = inputSample_.getDimension();
     const Point mean(inputSample_.computeMean());
-    const Point stdev(inputSample_.computeStandardDeviationPerComponent());
+    const Point stdev(inputSample_.computeStandardDeviation());
     SquareMatrix linear(dimension);
     for (UnsignedInteger j = 0; j < dimension; ++ j)
     {

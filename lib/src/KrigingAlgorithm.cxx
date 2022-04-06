@@ -180,8 +180,8 @@ void KrigingAlgorithm::run()
   // If normalize, set input transformation
   if (normalize_)
   {
+    throw InvalidArgumentException(HERE) << "Actually, no normalization allowed";
     const Function inputTransformation(glmResult.getTransformation());
-    result_.setTransformation(inputTransformation);
   }
 }
 
