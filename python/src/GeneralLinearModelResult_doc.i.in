@@ -50,19 +50,6 @@ The meta model :math:`\tilde{\cM}: \Rset^d \rightarrow \Rset^p` is defined by:
 
 where :math:`\mu_l(\vect{x}) = \sum_{j=1}^{n_l} \alpha_j^l \varphi_j^l(\vect{x})` and :math:`\varphi_j^l: \Rset^d \rightarrow \Rset` are the trend functions.
 
-If a normalizing transformation *T* has been used, the meta model is built on the inputs :math:`\vect{z}_k = T(\vect{x}_k)` and the meta model writes:
-
-.. math::
-    :label: metaModelWithT
-
-    \tilde{\cM}(\vect{x}) = \left(
-      \begin{array}{l}
-        \mu_1\circ T(\vect{x}) \\
-        \dots  \\
-        \mu_p\circ T(\vect{x}) 
-       \end{array}
-     \right)
-
 Examples
 --------
 Create the model :math:`\cM: \Rset \mapsto \Rset` and the samples:
@@ -141,28 +128,6 @@ Returns
 -------
 metaModel : :class:`~openturns.Function`
     The meta model :math:`\tilde{\cM}: \Rset^d \rightarrow \Rset^p`, defined in :eq:'metaModel'.
-"
-
-// ---------------------------------------------------------------------
-
-%feature("docstring") OTGU::GeneralLinearModelResult::getTransformation
-"Accessor to the normalizing transformation.
-
-Returns
--------
-transformation : :class:`~openturns.Function`
-    The transformation *T* that normalizes the input sample.
-"
-
-// ---------------------------------------------------------------------
-
-%feature("docstring") OTGU::GeneralLinearModelResult::setTransformation
-"Set accessor to the normalizing transformation.
-
-Parameters
-----------
-transformation : :class:`~openturns.Function`
-    The transformation *T* that normalizes the input sample.
 "
 
 // ---------------------------------------------------------------------

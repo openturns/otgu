@@ -57,15 +57,13 @@ public:
   KrigingAlgorithm (const OT::Sample & inputSample,
                     const OT::Sample & outputSample,
                     const OT::CovarianceModel & covarianceModel,
-                    const OT::Basis & basis,
-                    const OT::Bool normalize = true);
+                    const OT::Basis & basis);
 
   /** Constructor */
   KrigingAlgorithm (const OT::Sample & inputSample,
                     const OT::Sample & outputSample,
                     const OT::CovarianceModel & covarianceModel,
-                    const BasisCollection & basisCollection,
-                    const OT::Bool normalize = true);
+                    const BasisCollection & basisCollection);
 
   /** Virtual constructor */
   KrigingAlgorithm * clone() const;
@@ -128,7 +126,6 @@ private:
   OT::Sample inputSample_;
   // The associated output data
   OT::Sample outputSample_;
-  OT::Bool normalize_;
   // The covariance model parametric family
   OT::CovarianceModel covarianceModel_;
   // Underlying algo used for the evaluation of parameters

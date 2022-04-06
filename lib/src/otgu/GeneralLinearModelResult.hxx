@@ -98,10 +98,6 @@ public:
   /** Conditional covariance models accessor */
   OT::CovarianceModel getCovarianceModel() const;
 
-  /** Transformation accessor */
-  OT::Function getTransformation() const;
-  void setTransformation(const OT::Function & transformation);
-
   /** process accessor */
   OT::Process getNoise() const;
 
@@ -125,22 +121,10 @@ protected:
   /** Method that returns the covariance factor - hmat */
   OT::HMatrix getHMatCholeskyFactor() const;
 
-  // Return input sample transformed
-  OT::Sample getInputTransformedSample() const;
-
 private:
 
   /** inputData should be keeped*/
   OT::Sample inputData_;
-
-  /** input transformed data: store data*/
-  OT::Sample inputTransformedData_;
-
-  /** inputTransformation ==> iso-probabilistic transformation */
-  OT::Function inputTransformation_;
-
-  /** Boolean transformation */
-  OT::Bool hasTransformation_;
 
   /** The trend basis */
   BasisPersistentCollection basis_;

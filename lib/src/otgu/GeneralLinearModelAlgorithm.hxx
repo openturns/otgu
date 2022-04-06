@@ -55,14 +55,12 @@ public:
   GeneralLinearModelAlgorithm (const OT::Sample & inputSample,
                                const OT::Sample & outputSample,
                                const OT::CovarianceModel & covarianceModel,
-                               const OT::Bool normalize = OT::ResourceMap::GetAsBool("GeneralLinearModelAlgorithm-NormalizeData"),
                                const OT::Bool keepCholeskyFactor = OT::ResourceMap::GetAsBool("GeneralLinearModelAlgorithm-KeepCovariance"));
 
   GeneralLinearModelAlgorithm (const OT::Sample & inputSample,
                                const OT::Sample & outputSample,
                                const OT::CovarianceModel & covarianceModel,
                                const OT::Basis & basis,
-                               const OT::Bool normalize = OT::ResourceMap::GetAsBool("GeneralLinearModelAlgorithm-NormalizeData"),
                                const OT::Bool keepCholeskyFactor = OT::ResourceMap::GetAsBool("GeneralLinearModelAlgorithm-KeepCovariance"));
 
   /** Parameters constructor */
@@ -70,7 +68,6 @@ public:
                                const OT::Sample & outputSample,
                                const OT::CovarianceModel & covarianceModel,
                                const BasisCollection & basisCollection,
-                               const OT::Bool normalize = OT::ResourceMap::GetAsBool("GeneralLinearModelAlgorithm-NormalizeData"),
                                const OT::Bool keepCholeskyFactor = OT::ResourceMap::GetAsBool("GeneralLinearModelAlgorithm-KeepCovariance"));
 
   /** Virtual constructor */
@@ -81,10 +78,6 @@ public:
 
   /** Perform regression */
   void run();
-
-  /** input transformation accessor */
-  void setInputTransformation(const OT::Function & inputTransformation);
-  OT::Function getInputTransformation() const;
 
   /** Sample accessors */
   OT::Sample getInputSample() const;
@@ -248,10 +241,6 @@ private:
 
   // Standardized version of the input data
   OT::Sample normalizedInputSample_;
-
-  // Standardization function
-  OT::Function inputTransformation_;
-  mutable OT::Bool normalize_;
 
   // The associated output data
   OT::Sample outputSample_;
