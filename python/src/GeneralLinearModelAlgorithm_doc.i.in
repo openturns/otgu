@@ -2,9 +2,9 @@
 "Algorithm for the evaluation of general linear models.
 
 Available constructors:
-    GeneralLinearModelAlgorithm(*inputSample, outputSample, covarianceModel, basis, normalize=True, keepCovariance=True*)
+    GeneralLinearModelAlgorithm(*inputSample, outputSample, covarianceModel, basis, keepCovariance=True*)
 
-    GeneralLinearModelAlgorithm(*inputSample, outputSample, covarianceModel, basisCollection, normalize=True, keepCovariance=True*)
+    GeneralLinearModelAlgorithm(*inputSample, outputSample, covarianceModel, basisCollection, keepCovariance=True*)
 
 Parameters
 ----------
@@ -21,11 +21,6 @@ basisCollection : collection of :class:`~openturns.Basis`
     An empty collection means that no trend is estimated.
 covarianceModel : :class:`~openturns.CovarianceModel`
     Covariance model of the Gaussian process. See notes for the details.
-
-normalize : bool, optional
-    Indicates whether the input sample has to be normalized.
-    If True, input sample is centered & reduced.
-    Default is set in resource map key `GeneralLinearModelAlgorithm-NormalizeData`
 
 keepCovariance : bool, optional
     Indicates whether the covariance matrix has to be stored in the result structure *GeneralLinearModelResult*.
@@ -81,8 +76,6 @@ We note:
 The *GeneralLinearModelAlgorithm* class estimates the coefficients :math:`\beta_j^\ell` and :math:`\vect{p}` where :math:`\vect{p}` is the vector of parameters of the covariance model (a subset of :math:`\vect{\theta}, \vect{\sigma}, \mat{R}, \vect{\lambda}`) that has been declared as *active* (by default, the full vectors :math:`\vect{\theta}` and :math:`\vect{\sigma}`).
 
 The estimation is done by maximizing the *reduced* log-likelihood of the model, see its expression below.
-
-If a normalizing transformation :math:`T` has been used, the meta model is built on the inputs :math:`\vect{z}_k = T(\vect{x}_k)`.
 
 **Estimation of the parameters** :math:`\beta_j^\ell` and :math:`\vect{p}`
 
@@ -183,6 +176,7 @@ Examples
 Create the model :math:`\cM: \Rset \mapsto \Rset` and the samples:
 
 >>> import openturns as ot
+>>> import otgu
 >>> f = ot.SymbolicFunction(['x'], ['x+x * sin(x)'])
 >>> inputSample = ot.Sample([[1.0], [3.0], [5.0], [6.0], [7.0], [8.0]])
 >>> outputSample = f(inputSample)
@@ -195,35 +189,15 @@ Create the algorithm:
 >>> basis = ot.Basis([f1,f2, f3])
 >>> covarianceModel = ot.SquaredExponential([1.0])
 >>> covarianceModel.setActiveParameter([])
->>> algo = ot.GeneralLinearModelAlgorithm(inputSample, outputSample, covarianceModel, basis)
+>>> algo = otgu.GeneralLinearModelAlgorithm(inputSample, outputSample, covarianceModel, basis)
+>>> # Penalize the log-likelihood with the reference prior
+>>> algo.setScalePrior(otgu.GeneralLinearModelAlgorithm.REFERENCE)
 >>> algo.run()
 
 Get the resulting meta model:
 
 >>> result = algo.getResult()
 >>> metamodel = result.getMetaModel()"
-
-// ---------------------------------------------------------------------
-
-%feature("docstring") OTGU::GeneralLinearModelAlgorithm::getInputTransformation
-"Get the function normalizing the input.
-
-Returns
--------
-transformation : :class:`~openturns.Function`
-    Function *T* that normalizes the input."
-
-// ---------------------------------------------------------------------
-
-%feature("docstring") OTGU::GeneralLinearModelAlgorithm::setInputTransformation
-"Set the function normalizing the input.
-
-Parameters
-----------
-transformation : :class:`~openturns.Function`
-    Function that normalizes the input.
-    The input dimension should be the same as input's sample dimension, output dimension
-    should be output sample's dimension"
 
 // ---------------------------------------------------------------------
 
@@ -372,7 +346,7 @@ resource map key.
 
 For scale parameters, default upper bounds are set as :math:`2`
 times the difference between the max and min values of `X` for
-each coordinate, `X` being the (transformed) input sample.
+each coordinate, `X` being the input sample.
 The value :math:`2` is defined in resource map
 (`GeneralLinearModelAlgorithm-DefaultOptimizationScaleFactor`).
 

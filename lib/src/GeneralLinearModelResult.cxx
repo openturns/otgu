@@ -55,9 +55,6 @@ GeneralLinearModelResult::GeneralLinearModelResult(const Sample & inputSample,
     const Scalar optimalLogLikelihood)
   : MetaModelResult(DatabaseFunction(inputSample, outputSample), metaModel, residuals, relativeErrors)
   , inputData_(inputSample)
-  , inputTransformedData_(inputSample)
-  , inputTransformation_()
-  , hasTransformation_(false)
   , basis_(basis)
   , beta_(trendCoefficients)
   , covarianceModel_(covarianceModel)
@@ -86,9 +83,6 @@ GeneralLinearModelResult::GeneralLinearModelResult(const Sample & inputSample,
     const HMatrix & covarianceHMatrix)
   : MetaModelResult(DatabaseFunction(inputSample, outputSample), metaModel, residuals, relativeErrors)
   , inputData_(inputSample)
-  , inputTransformedData_(inputSample)
-  , inputTransformation_()
-  , hasTransformation_(false)
   , basis_(basis)
   , beta_(trendCoefficients)
   , covarianceModel_(covarianceModel)
@@ -157,21 +151,6 @@ CovarianceModel GeneralLinearModelResult::getCovarianceModel() const
   return covarianceModel_;
 }
 
-Function GeneralLinearModelResult::getTransformation() const
-{
-  return inputTransformation_;
-}
-
-void GeneralLinearModelResult::setTransformation(const Function & transformation)
-{
-  if (transformation.getInputDimension() != inputData_.getDimension())
-    throw InvalidArgumentException(HERE) << "In KrigingResult::setTransformation, incompatible function dimension. Function should have input dimension = " << inputData_.getDimension() << ". Here, function's input dimension = " << transformation.getInputDimension();
-  inputTransformation_ = transformation;
-  // Map inputData using the transformation
-  inputTransformedData_ = transformation(inputData_);
-  hasTransformation_ = true;
-}
-
 /* Optimal log-likelihood accessor */
 Scalar GeneralLinearModelResult::getOptimalLogLikelihood() const
 {
@@ -193,7 +172,7 @@ Process GeneralLinearModelResult::getNoise() const
     return noise;
   }
   // Other covariance models
-  const GaussianProcess noise(covarianceModel_, Mesh(inputTransformedData_));
+  const GaussianProcess noise(covarianceModel_, Mesh(inputData_));
   return noise;
 }
 
@@ -209,20 +188,11 @@ HMatrix GeneralLinearModelResult::getHMatCholeskyFactor() const
   return covarianceHMatrix_;
 }
 
-// Return input sample transformed
-Sample GeneralLinearModelResult::getInputTransformedSample() const
-{
-  return inputTransformedData_;
-}
-
 /* Method save() stores the object through the StorageManager */
 void GeneralLinearModelResult::save(Advocate & adv) const
 {
   MetaModelResult::save(adv);
   adv.saveAttribute( "inputData_", inputData_ );
-  adv.saveAttribute( "inputTransformedData_", inputTransformedData_ );
-  adv.saveAttribute( "inputTransformation_", inputTransformation_ );
-  adv.saveAttribute( "hasTransformation_", hasTransformation_ );
   adv.saveAttribute( "basis_", basis_ );
   adv.saveAttribute( "beta_", beta_ );
   adv.saveAttribute( "covarianceModel_", covarianceModel_ );
@@ -237,9 +207,6 @@ void GeneralLinearModelResult::load(Advocate & adv)
 {
   MetaModelResult::load(adv);
   adv.loadAttribute( "inputData_", inputData_ );
-  adv.loadAttribute( "inputTransformedData_", inputTransformedData_ );
-  adv.loadAttribute( "inputTransformation_", inputTransformation_ );
-  adv.loadAttribute( "hasTransformation_", hasTransformation_ );
   adv.loadAttribute( "basis_", basis_ );
   adv.loadAttribute( "beta_", beta_ );
   adv.loadAttribute( "covarianceModel_", covarianceModel_ );
